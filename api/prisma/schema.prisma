@@ -44,7 +44,7 @@ model Account {
   id                String   @id @default(uuid())
   userId            String
   provider          Provider
-  providerAccountId String
+  providerAccountId String   @unique
   User              User     @relation(fields: [userId], references: [id])
 
   @@map("accounts")

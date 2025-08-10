@@ -1,6 +1,7 @@
 import passport from "passport";
 import { AuthService } from "./service";
 import { Request, Response, NextFunction } from "express";
+import { User } from "@prisma/client";
 
 export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -51,5 +52,20 @@ export class AuthController {
         res.status(200).json({ message: "success", user });
       }
     )(req, res, next);
+  }
+
+  static async googleCallback(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(401).json({ message: "Google authentication failed." });
+    }
+    try {
+      const result = await AuthService.login(req.user as User);
+      res.status(200).json({
+        message: "Google authentication successful",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
 }

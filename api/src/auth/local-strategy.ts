@@ -12,7 +12,10 @@ passport.use(
         if (!user) {
           return done(null, false, { message: "Invalid Credentials." });
         }
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          user.password as string
+        );
         if (!isPasswordValid) {
           return done(null, false, { message: "Invalid Credentials." });
         }
